@@ -7,6 +7,8 @@ const studentRoutes = require("./routes/student.routes");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const mongoose = require("mongoose");
+require("dotenv").config();
+
 const { errorHandler, notFoundHandler } = require("./middleware/errorHandlers");
 const PORT = 5005;
 
@@ -27,7 +29,7 @@ const app = express();
 // ...
 app.use(
   cors({
-    origin: ["http://127.0.0.1:5173"],
+    origin: ["http://localhost:5173"],
   })
 );
 app.use(express.json());

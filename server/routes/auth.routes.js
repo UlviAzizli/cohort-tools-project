@@ -68,6 +68,7 @@ authRouter.post("/auth/login", (req, res) => {
       res.json({ message: "succesfull login", authToken: token, payload });
     })
     .catch((error) => {
+      console.log(error);
       res.json({ message: "a problem has been occured" });
     });
 });

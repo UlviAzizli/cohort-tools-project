@@ -37,7 +37,6 @@ function AuthProviderWrapper(props) {
         .catch((error) => {
           if (error) {
             setAuthError(error.response.data.message);
-            return;
           }
           // If the server sends an error response (invalid token)
           // Update state variables
