@@ -4,6 +4,8 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const cohortRoutes = require("./routes/cohort.routes");
 const studentRoutes = require("./routes/student.routes");
+const authRoutes = require("./routes/auth.routes");
+const userRoutes = require("./routes/user.routes");
 const mongoose = require("mongoose");
 const { errorHandler, notFoundHandler } = require("./middleware/errorHandlers");
 const PORT = 5005;
@@ -40,6 +42,8 @@ app.use(cookieParser());
 
 app.use("/", cohortRoutes);
 app.use("/", studentRoutes);
+app.use("/", authRoutes);
+app.use("/", userRoutes);
 
 app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
