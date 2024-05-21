@@ -2,9 +2,31 @@ const express = require("express");
 const router = express.Router();
 const Cohort = require("../models/Cohort.model");
 
-router.post("/", async (req, res) => {
+router.post("/api/cohorts", async (req, res, next) => {
+  const {
+    inProgress,
+    cohortSlug,
+    cohortName,
+    program,
+    campus,
+    endDate,
+    programManager,
+    leadTeacher,
+    totalHours,
+  } = req.body;
+
   try {
-    const cohort = new Cohort(req.body);
+    const cohort = new Cohort({
+      inProgress,
+      cohortSlug,
+      cohortName,
+      program,
+      campus,
+      endDate,
+      programManager: programManager || "",
+      leadTeacher,
+      totalHours,
+    });
     await cohort.save();
     res.status(201).json(cohort);
   } catch (err) {
@@ -12,16 +34,22 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/api/cohorts", async (req, res, next) => {
+  const { campus, program } = req.query;
+
   try {
-    const cohorts = await Cohort.find();
-    res.json(cohorts);
+    let query = {};
+    if (campus) query.campus = campus;
+    if (program) query.program = program;
+
+    const cohorts = await Cohort.find(query);
+    res.status(200).json(cohorts);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-router.get("/:cohortId", async (req, res) => {
+router.get("/api/cohorts/:cohortId", async (req, res) => {
   try {
     const cohort = await Cohort.findById(req.params.cohortId);
     if (!cohort) {
@@ -33,11 +61,33 @@ router.get("/:cohortId", async (req, res) => {
   }
 });
 
-router.put("/:cohortId", async (req, res) => {
+router.put("/api/cohorts/:cohortId", async (req, res) => {
+  const {
+    inProgress,
+    cohortSlug,
+    cohortName,
+    program,
+    campus,
+    endDate,
+    programManager,
+    leadTeacher,
+    totalHours,
+  } = req.body;
+
   try {
     const cohort = await Cohort.findByIdAndUpdate(
       req.params.cohortId,
-      req.body,
+      {
+        inProgress,
+        cohortSlug,
+        cohortName,
+        program,
+        campus,
+        endDate,
+        programManager: programManager || "",
+        leadTeacher,
+        totalHours,
+      },
       { new: true, runValidators: true }
     );
     if (!cohort) {
@@ -49,7 +99,7 @@ router.put("/:cohortId", async (req, res) => {
   }
 });
 
-router.delete("/:cohortId", async (req, res) => {
+router.delete("/api/cohorts/:cohortId", async (req, res) => {
   try {
     const cohort = await Cohort.findByIdAndDelete(req.params.cohortId);
     if (!cohort) {
